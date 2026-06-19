@@ -1,0 +1,7 @@
+{
+  "pages": 0,
+  "chunks": 0,
+  "failed_fetches": 4,
+  "jsonl": "output/pine_v6_rag_dataset.jsonl",
+  "manifest": "output/pine_v6_rag_manifest.csv"
+}
