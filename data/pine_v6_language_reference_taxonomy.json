@@ -1,0 +1,1389 @@
+{
+  "schema_version": "1.0",
+  "taxonomy_id": "pine_script_v6_exhaustive_language_reference_taxonomy",
+  "title": "Pine Script v6 Exhaustive Language Reference Taxonomy",
+  "version": "v6",
+  "source_scope": {
+    "manual": "https://www.tradingview.com/pine-script-docs/",
+    "language_manual": "https://www.tradingview.com/pine-script-docs/language/",
+    "reference_manual": "https://www.tradingview.com/pine-script-reference/v6/"
+  },
+  "purpose": "A detailed taxonomy for RAG systems that need to classify Pine Script v6 questions and chunks by namespace, invariant, built-in variable family, syntax construct, and language concept.",
+  "language_invariants": [
+    {
+      "id": "bar_by_bar_execution",
+      "name": "Bar-by-bar execution",
+      "definition": "Pine scripts execute sequentially across chart bars, evaluating the script once for each historical bar and then on realtime updates according to script type and settings.",
+      "retrieval_tags": [
+        "execution_model",
+        "historical_bars",
+        "realtime_bars"
+      ]
+    },
+    {
+      "id": "series_time_travel",
+      "name": "Implicit time-series history",
+      "definition": "Values produced by expressions are stored as time series when their qualifier permits it, and prior values can be referenced with the history-referencing operator [].",
+      "retrieval_tags": [
+        "series",
+        "history_reference",
+        "operator"
+      ]
+    },
+    {
+      "id": "rollback_commit_realtime",
+      "name": "Rollback and commit on realtime bars",
+      "definition": "On realtime bars, Pine can roll variables and objects back to their last committed state on each update, then commit final states when the bar closes; declaration modes such as varip affect this behavior.",
+      "retrieval_tags": [
+        "rollback",
+        "commit",
+        "realtime",
+        "varip"
+      ]
+    },
+    {
+      "id": "qualifier_hierarchy",
+      "name": "Qualifier hierarchy",
+      "definition": "Qualified types progress from const to input to simple to series, and expressions generally inherit the strongest qualifier required by their operands or runtime dependencies.",
+      "ordered_qualifiers": [
+        "const",
+        "input",
+        "simple",
+        "series"
+      ],
+      "retrieval_tags": [
+        "type_system",
+        "qualifiers"
+      ]
+    },
+    {
+      "id": "value_vs_reference_types",
+      "name": "Value and reference type split",
+      "definition": "Fundamental value types hold direct values, while special drawing, collection, chart point, and UDT instances are reference IDs whose values are accessed or mutated through functions, methods, and fields.",
+      "value_types": [
+        "int",
+        "float",
+        "bool",
+        "color",
+        "string"
+      ],
+      "reference_types": [
+        "array",
+        "matrix",
+        "map",
+        "line",
+        "linefill",
+        "box",
+        "polyline",
+        "label",
+        "table",
+        "chart.point",
+        "user-defined type"
+      ],
+      "retrieval_tags": [
+        "types",
+        "reference_types",
+        "value_types"
+      ]
+    },
+    {
+      "id": "na_typing",
+      "name": "Typed na values",
+      "definition": "The na value represents an unavailable value; declarations initialized with na require an explicit type or a cast so the compiler can infer the intended type.",
+      "retrieval_tags": [
+        "na",
+        "type_inference",
+        "variables"
+      ]
+    },
+    {
+      "id": "global_vs_local_scope",
+      "name": "Global and local scope",
+      "definition": "Top-level statements are in global scope, while functions, methods, conditionals, loops, and other blocks create local scopes that control visibility and mutation rules.",
+      "retrieval_tags": [
+        "scope",
+        "script_structure"
+      ]
+    },
+    {
+      "id": "single_static_script",
+      "name": "Single static script declaration",
+      "definition": "A script is declared as exactly one indicator, strategy, or library using its declaration statement; that declaration determines runtime behavior and available outputs.",
+      "allowed_declarations": [
+        "indicator()",
+        "strategy()",
+        "library()"
+      ],
+      "retrieval_tags": [
+        "declaration",
+        "indicator",
+        "strategy",
+        "library"
+      ]
+    },
+    {
+      "id": "plotting_and_drawing_side_effects",
+      "name": "Visual side-effect model",
+      "definition": "Visual outputs are produced by plot-family calls and drawing/table object APIs; many plot calls are designed for global-scope use, while drawing IDs can be created and mutated conditionally.",
+      "retrieval_tags": [
+        "plots",
+        "drawings",
+        "tables",
+        "side_effects"
+      ]
+    },
+    {
+      "id": "resource_limits",
+      "name": "Runtime and object limits",
+      "definition": "Scripts are subject to execution-time, request, memory, drawing-object, collection-size, and plot-count limits, so taxonomy metadata should preserve constructs that may affect limits.",
+      "retrieval_tags": [
+        "limitations",
+        "objects",
+        "request",
+        "performance"
+      ]
+    }
+  ],
+  "syntax_taxonomy": [
+    {
+      "id": "version_directive",
+      "syntax": "//@version=6",
+      "definition": "Compiler directive selecting Pine Script language version 6.",
+      "placement": "first non-empty line recommended",
+      "tags": [
+        "version",
+        "script_structure"
+      ]
+    },
+    {
+      "id": "comments",
+      "syntax": "// comment",
+      "definition": "Single-line comments ignored by the compiler; also used by special annotations and compiler directives.",
+      "tags": [
+        "comments",
+        "annotations"
+      ]
+    },
+    {
+      "id": "declaration_statement",
+      "syntax": "indicator(title, ...), strategy(title, ...), or library(title, ...)",
+      "definition": "Top-level declaration that establishes the script kind and its compile/runtime properties.",
+      "tags": [
+        "declaration",
+        "indicator",
+        "strategy",
+        "library"
+      ]
+    },
+    {
+      "id": "variable_declaration",
+      "syntax": "[declaration_mode] [type] identifier = expression",
+      "definition": "Creates a variable, optionally specifying declaration mode and type before assigning an initial expression.",
+      "modes": [
+        "default",
+        "var",
+        "varip"
+      ],
+      "tags": [
+        "variables",
+        "assignment"
+      ]
+    },
+    {
+      "id": "tuple_declaration",
+      "syntax": "[a, b, _] = functionReturningTuple()",
+      "definition": "Destructures multiple returned values into identifiers; underscore discards unwanted values.",
+      "tags": [
+        "tuple",
+        "variables"
+      ]
+    },
+    {
+      "id": "reassignment",
+      "syntax": "identifier := expression",
+      "definition": "Updates an existing variable rather than declaring a new one.",
+      "tags": [
+        "assignment",
+        "variables"
+      ]
+    },
+    {
+      "id": "function_declaration",
+      "syntax": "functionName(parameterList) => expression_or_block",
+      "definition": "Defines a user function with an implicit return value from the final expression or block result.",
+      "tags": [
+        "functions",
+        "user_defined_functions"
+      ]
+    },
+    {
+      "id": "method_declaration",
+      "syntax": "method methodName(receiverType receiver, parameters...) => expression_or_block",
+      "definition": "Defines a method callable with dot notation on values of the receiver type.",
+      "tags": [
+        "methods",
+        "dot_notation"
+      ]
+    },
+    {
+      "id": "type_declaration",
+      "syntax": "type TypeName\n    fieldType fieldName = defaultValue",
+      "definition": "Declares a user-defined type with named fields and optional defaults.",
+      "tags": [
+        "objects",
+        "udt",
+        "types"
+      ]
+    },
+    {
+      "id": "enum_declaration",
+      "syntax": "enum EnumName\n    fieldName = title",
+      "definition": "Declares a set of symbolic values that can be used for type-safe choices and switch/input options.",
+      "tags": [
+        "enums",
+        "types"
+      ]
+    },
+    {
+      "id": "if_expression",
+      "syntax": "if condition\n    block\nelse if condition\n    block\nelse\n    block",
+      "definition": "Conditional structure that can execute side effects and return a value from branch-local blocks.",
+      "tags": [
+        "if",
+        "conditional"
+      ]
+    },
+    {
+      "id": "switch_expression",
+      "syntax": "switch expression\n    value => result\n    => defaultResult",
+      "definition": "Multi-branch conditional structure that selects a result by expression value or by condition clauses.",
+      "tags": [
+        "switch",
+        "conditional"
+      ]
+    },
+    {
+      "id": "for_loop",
+      "syntax": "for i = start to end [by step]\n    block",
+      "definition": "Counted loop that iterates over an integer range with optional step.",
+      "tags": [
+        "loops",
+        "for"
+      ]
+    },
+    {
+      "id": "for_in_loop",
+      "syntax": "for item in collection\n    block",
+      "definition": "Collection iteration loop for arrays, matrices, maps, and tuple-like item forms supported by the collection API.",
+      "tags": [
+        "loops",
+        "collections"
+      ]
+    },
+    {
+      "id": "while_loop",
+      "syntax": "while condition\n    block",
+      "definition": "Loop that repeats while the condition remains true.",
+      "tags": [
+        "loops",
+        "while"
+      ]
+    },
+    {
+      "id": "history_reference_operator",
+      "syntax": "expression[offset]",
+      "definition": "References prior values in the expression's time series, where offset is typically a non-negative number of bars back.",
+      "tags": [
+        "operator",
+        "series",
+        "history"
+      ]
+    },
+    {
+      "id": "ternary_operator",
+      "syntax": "condition ? trueExpression : falseExpression",
+      "definition": "Inline conditional expression that chooses one of two expressions.",
+      "tags": [
+        "operator",
+        "conditional"
+      ]
+    },
+    {
+      "id": "dot_notation",
+      "syntax": "receiver.method(args) or object.field",
+      "definition": "Accesses methods on values and fields on user-defined objects or chart point references.",
+      "tags": [
+        "methods",
+        "objects"
+      ]
+    },
+    {
+      "id": "import_statement",
+      "syntax": "import username/libraryName/version as alias",
+      "definition": "Imports an exported library namespace for use in a script.",
+      "tags": [
+        "libraries",
+        "import"
+      ]
+    },
+    {
+      "id": "annotation_comments",
+      "syntax": "//@function, //@param, //@returns, //@type, //@field, //@enum, //@variable",
+      "definition": "Documentation annotations used to describe exported and user-facing script elements.",
+      "tags": [
+        "annotations",
+        "libraries",
+        "documentation"
+      ]
+    }
+  ],
+  "type_taxonomy": {
+    "qualifiers": [
+      {
+        "name": "const",
+        "definition": "Compile-time constant value that does not depend on inputs, chart data, or runtime state."
+      },
+      {
+        "name": "input",
+        "definition": "Value determined by user input controls before script execution on bars."
+      },
+      {
+        "name": "simple",
+        "definition": "Runtime value that is stable across bars after initialization or does not require full series history."
+      },
+      {
+        "name": "series",
+        "definition": "Bar-dependent value that can vary across bars and can be history-referenced."
+      }
+    ],
+    "fundamental_types": [
+      {
+        "name": "int",
+        "definition": "Integer numeric value."
+      },
+      {
+        "name": "float",
+        "definition": "Floating-point numeric value."
+      },
+      {
+        "name": "bool",
+        "definition": "Boolean true/false value."
+      },
+      {
+        "name": "color",
+        "definition": "Color value, including optional transparency."
+      },
+      {
+        "name": "string",
+        "definition": "Text value."
+      }
+    ],
+    "special_values_and_types": [
+      {
+        "name": "na",
+        "definition": "Unavailable or undefined value requiring typed context in declarations."
+      },
+      {
+        "name": "void",
+        "definition": "No usable return value, typically from side-effect functions."
+      }
+    ],
+    "reference_types": [
+      {
+        "name": "array<T>",
+        "definition": "Reference to a one-dimensional mutable collection of homogeneous elements."
+      },
+      {
+        "name": "matrix<T>",
+        "definition": "Reference to a two-dimensional mutable collection of homogeneous elements."
+      },
+      {
+        "name": "map<K,V>",
+        "definition": "Reference to a key-value collection with homogeneous key and value types."
+      },
+      {
+        "name": "line",
+        "definition": "Drawing object reference for line drawings."
+      },
+      {
+        "name": "linefill",
+        "definition": "Drawing object reference for fill areas between two lines."
+      },
+      {
+        "name": "box",
+        "definition": "Drawing object reference for rectangular boxes."
+      },
+      {
+        "name": "polyline",
+        "definition": "Drawing object reference for polyline drawings."
+      },
+      {
+        "name": "label",
+        "definition": "Drawing object reference for text labels."
+      },
+      {
+        "name": "table",
+        "definition": "Floating table object reference."
+      },
+      {
+        "name": "chart.point",
+        "definition": "Reference-like point structure used by drawing APIs to carry bar/time and price coordinates."
+      },
+      {
+        "name": "UDT",
+        "definition": "Instance of a user-defined type declared with the type keyword."
+      }
+    ]
+  },
+  "operator_taxonomy": [
+    {
+      "category": "arithmetic",
+      "operators": [
+        "+",
+        "-",
+        "*",
+        "/",
+        "%"
+      ],
+      "definition": "Numeric operators, with + also used for string concatenation where applicable."
+    },
+    {
+      "category": "comparison",
+      "operators": [
+        "<",
+        "<=",
+        ">",
+        ">=",
+        "==",
+        "!="
+      ],
+      "definition": "Operators producing boolean comparisons between compatible values."
+    },
+    {
+      "category": "logical",
+      "operators": [
+        "not",
+        "and",
+        "or"
+      ],
+      "definition": "Boolean operators for negation, conjunction, and disjunction."
+    },
+    {
+      "category": "conditional",
+      "operators": [
+        "?:"
+      ],
+      "definition": "Ternary conditional operator for expression-level branching."
+    },
+    {
+      "category": "history",
+      "operators": [
+        "[]"
+      ],
+      "definition": "History-reference operator for retrieving prior time-series values."
+    },
+    {
+      "category": "assignment",
+      "operators": [
+        "=",
+        ":="
+      ],
+      "definition": "Declaration assignment and reassignment operators."
+    }
+  ],
+  "namespace_taxonomy": [
+    {
+      "name": "array",
+      "definition": "Functions and methods for creating, reading, writing, resizing, sorting, copying, and iterating one-dimensional collections.",
+      "primary_types": [
+        "array<T>"
+      ],
+      "common_topics": [
+        "new",
+        "get",
+        "set",
+        "push",
+        "pop",
+        "shift",
+        "unshift",
+        "insert",
+        "remove",
+        "clear",
+        "copy",
+        "slice",
+        "sort",
+        "size"
+      ]
+    },
+    {
+      "name": "box",
+      "definition": "Functions and methods for rectangular drawing objects anchored to bar/time and price coordinates.",
+      "primary_types": [
+        "box"
+      ],
+      "common_topics": [
+        "new",
+        "delete",
+        "copy",
+        "getters",
+        "setters",
+        "text",
+        "coordinates"
+      ]
+    },
+    {
+      "name": "chart",
+      "definition": "Chart-point helpers and chart metadata constructs used with drawing coordinates.",
+      "primary_types": [
+        "chart.point"
+      ],
+      "common_topics": [
+        "point",
+        "from_index",
+        "from_time",
+        "now",
+        "bar/time coordinates"
+      ]
+    },
+    {
+      "name": "color",
+      "definition": "Color construction and manipulation helpers.",
+      "primary_types": [
+        "color"
+      ],
+      "common_topics": [
+        "rgb",
+        "new",
+        "from_gradient",
+        "transparency",
+        "components"
+      ]
+    },
+    {
+      "name": "hline",
+      "definition": "Horizontal-line output helpers for static reference levels.",
+      "primary_types": [
+        "hline"
+      ],
+      "common_topics": [
+        "hline declaration",
+        "fills",
+        "levels"
+      ]
+    },
+    {
+      "name": "input",
+      "definition": "Input functions that expose configurable values in the script settings UI.",
+      "primary_types": [
+        "input-qualified values"
+      ],
+      "common_topics": [
+        "input",
+        "int",
+        "float",
+        "bool",
+        "color",
+        "string",
+        "source",
+        "symbol",
+        "timeframe",
+        "enum",
+        "session"
+      ]
+    },
+    {
+      "name": "label",
+      "definition": "Functions and methods for text label drawing objects.",
+      "primary_types": [
+        "label"
+      ],
+      "common_topics": [
+        "new",
+        "delete",
+        "copy",
+        "getters",
+        "setters",
+        "style",
+        "text",
+        "tooltip"
+      ]
+    },
+    {
+      "name": "line",
+      "definition": "Functions and methods for line drawing objects.",
+      "primary_types": [
+        "line"
+      ],
+      "common_topics": [
+        "new",
+        "delete",
+        "copy",
+        "getters",
+        "setters",
+        "extend",
+        "xloc"
+      ]
+    },
+    {
+      "name": "linefill",
+      "definition": "Functions and methods for fills between two line objects.",
+      "primary_types": [
+        "linefill"
+      ],
+      "common_topics": [
+        "new",
+        "delete",
+        "get_line1",
+        "get_line2",
+        "set_color"
+      ]
+    },
+    {
+      "name": "log",
+      "definition": "Logging helpers for debug output.",
+      "primary_types": [
+        "void"
+      ],
+      "common_topics": [
+        "info",
+        "warning",
+        "error",
+        "format strings"
+      ]
+    },
+    {
+      "name": "map",
+      "definition": "Functions and methods for key-value collections.",
+      "primary_types": [
+        "map<K,V>"
+      ],
+      "common_topics": [
+        "new",
+        "put",
+        "get",
+        "contains",
+        "remove",
+        "keys",
+        "values",
+        "copy",
+        "clear",
+        "size"
+      ]
+    },
+    {
+      "name": "math",
+      "definition": "Mathematical constants and numeric functions.",
+      "primary_types": [
+        "int",
+        "float"
+      ],
+      "common_topics": [
+        "abs",
+        "max",
+        "min",
+        "pow",
+        "sqrt",
+        "round",
+        "floor",
+        "ceil",
+        "sin",
+        "cos",
+        "random"
+      ]
+    },
+    {
+      "name": "matrix",
+      "definition": "Functions and methods for two-dimensional collections.",
+      "primary_types": [
+        "matrix<T>"
+      ],
+      "common_topics": [
+        "new",
+        "get",
+        "set",
+        "rows",
+        "columns",
+        "add_row",
+        "add_col",
+        "remove_row",
+        "remove_col",
+        "copy",
+        "reshape"
+      ]
+    },
+    {
+      "name": "plot",
+      "definition": "Plot-related display and metadata helpers used by plot-family functions and fills.",
+      "primary_types": [
+        "plot"
+      ],
+      "common_topics": [
+        "plot IDs",
+        "fills",
+        "display",
+        "styles"
+      ]
+    },
+    {
+      "name": "polyline",
+      "definition": "Functions and methods for polyline drawing objects defined by chart points.",
+      "primary_types": [
+        "polyline"
+      ],
+      "common_topics": [
+        "new",
+        "delete",
+        "copy",
+        "points",
+        "curved",
+        "closed"
+      ]
+    },
+    {
+      "name": "request",
+      "definition": "Cross-symbol, cross-timeframe, financial, economic, currency, seed, and lower-timeframe data request functions.",
+      "primary_types": [
+        "series values",
+        "arrays"
+      ],
+      "common_topics": [
+        "security",
+        "security_lower_tf",
+        "financial",
+        "economic",
+        "dividends",
+        "earnings",
+        "splits",
+        "currency_rate",
+        "seed"
+      ]
+    },
+    {
+      "name": "runtime",
+      "definition": "Runtime error and execution-state helper namespace.",
+      "primary_types": [
+        "void",
+        "runtime values"
+      ],
+      "common_topics": [
+        "error",
+        "halt conditions"
+      ]
+    },
+    {
+      "name": "str",
+      "definition": "String conversion, formatting, search, replacement, splitting, and casing helpers.",
+      "primary_types": [
+        "string"
+      ],
+      "common_topics": [
+        "tostring",
+        "tonumber",
+        "format",
+        "contains",
+        "pos",
+        "substring",
+        "replace",
+        "split",
+        "upper",
+        "lower"
+      ]
+    },
+    {
+      "name": "strategy",
+      "definition": "Strategy backtesting, order-placement, risk, trade, position, and performance variables/functions.",
+      "primary_types": [
+        "strategy state",
+        "orders",
+        "trades"
+      ],
+      "common_topics": [
+        "entry",
+        "order",
+        "exit",
+        "close",
+        "cancel",
+        "risk",
+        "position",
+        "opentrades",
+        "closedtrades",
+        "equity",
+        "netprofit"
+      ]
+    },
+    {
+      "name": "syminfo",
+      "definition": "Built-in variables describing the chart symbol, exchange, currency, pricescale, mintick, and instrument metadata.",
+      "primary_types": [
+        "simple and series metadata values"
+      ],
+      "common_topics": [
+        "tickerid",
+        "ticker",
+        "prefix",
+        "root",
+        "currency",
+        "basecurrency",
+        "mintick",
+        "pointvalue",
+        "type"
+      ]
+    },
+    {
+      "name": "ta",
+      "definition": "Technical-analysis functions for moving averages, oscillators, volatility, correlation, pivots, bar conditions, and common indicator calculations.",
+      "primary_types": [
+        "series int",
+        "series float",
+        "series bool"
+      ],
+      "common_topics": [
+        "sma",
+        "ema",
+        "rsi",
+        "macd",
+        "atr",
+        "stdev",
+        "highest",
+        "lowest",
+        "crossover",
+        "crossunder",
+        "barssince",
+        "valuewhen"
+      ]
+    },
+    {
+      "name": "table",
+      "definition": "Functions and methods for floating table objects and cells.",
+      "primary_types": [
+        "table"
+      ],
+      "common_topics": [
+        "new",
+        "cell",
+        "clear",
+        "delete",
+        "merge_cells",
+        "setters",
+        "positioning"
+      ]
+    },
+    {
+      "name": "ticker",
+      "definition": "Ticker ID construction and modification helpers for sessions, adjustments, chart types, and special data feeds.",
+      "primary_types": [
+        "tickerid string"
+      ],
+      "common_topics": [
+        "new",
+        "modify",
+        "heikinashi",
+        "renko",
+        "linebreak",
+        "kagi",
+        "pointfigure",
+        "standard"
+      ]
+    },
+    {
+      "name": "timeframe",
+      "definition": "Built-in variables and helper functions for chart timeframe classification and conversion.",
+      "primary_types": [
+        "string",
+        "bool",
+        "int"
+      ],
+      "common_topics": [
+        "period",
+        "multiplier",
+        "isseconds",
+        "isminutes",
+        "isdaily",
+        "isweekly",
+        "ismonthly",
+        "in_seconds",
+        "from_seconds",
+        "change"
+      ]
+    }
+  ],
+  "built_in_variable_taxonomy": [
+    {
+      "family": "price_series",
+      "variables": [
+        "open",
+        "high",
+        "low",
+        "close",
+        "hl2",
+        "hlc3",
+        "ohlc4"
+      ],
+      "definition": "Current and derived OHLC price series for the chart symbol/timeframe."
+    },
+    {
+      "family": "volume_series",
+      "variables": [
+        "volume"
+      ],
+      "definition": "Volume series for the chart symbol/timeframe where available."
+    },
+    {
+      "family": "bar_time_index",
+      "variables": [
+        "time",
+        "time_close",
+        "timenow",
+        "bar_index",
+        "last_bar_index"
+      ],
+      "definition": "Bar timestamps, current wall-clock-like time, and zero-based bar indices."
+    },
+    {
+      "family": "bar_state",
+      "variables": [
+        "barstate.isfirst",
+        "barstate.islast",
+        "barstate.ishistory",
+        "barstate.isrealtime",
+        "barstate.isnew",
+        "barstate.isconfirmed",
+        "barstate.islastconfirmedhistory"
+      ],
+      "definition": "Boolean variables describing the current bar's execution state."
+    },
+    {
+      "family": "session_state",
+      "variables": [
+        "session.ismarket",
+        "session.ispremarket",
+        "session.ispostmarket"
+      ],
+      "definition": "Boolean variables describing the current bar's session classification."
+    },
+    {
+      "family": "chart_metadata",
+      "variables": [
+        "chart.bg_color",
+        "chart.fg_color",
+        "chart.is_heikinashi",
+        "chart.is_kagi",
+        "chart.is_linebreak",
+        "chart.is_pnf",
+        "chart.is_range",
+        "chart.is_renko",
+        "chart.is_standard"
+      ],
+      "definition": "Variables describing chart colors and chart type."
+    },
+    {
+      "family": "symbol_metadata",
+      "variables": [
+        "syminfo.basecurrency",
+        "syminfo.currency",
+        "syminfo.description",
+        "syminfo.mintick",
+        "syminfo.pointvalue",
+        "syminfo.prefix",
+        "syminfo.pricescale",
+        "syminfo.root",
+        "syminfo.session",
+        "syminfo.ticker",
+        "syminfo.tickerid",
+        "syminfo.timezone",
+        "syminfo.type",
+        "syminfo.volumetype"
+      ],
+      "definition": "Variables describing the currently charted instrument."
+    },
+    {
+      "family": "timeframe_metadata",
+      "variables": [
+        "timeframe.isseconds",
+        "timeframe.isminutes",
+        "timeframe.isintraday",
+        "timeframe.isdaily",
+        "timeframe.isweekly",
+        "timeframe.ismonthly",
+        "timeframe.multiplier",
+        "timeframe.period"
+      ],
+      "definition": "Variables describing the chart timeframe."
+    },
+    {
+      "family": "strategy_account",
+      "variables": [
+        "strategy.account_currency",
+        "strategy.cash",
+        "strategy.equity",
+        "strategy.initial_capital",
+        "strategy.netprofit",
+        "strategy.openprofit",
+        "strategy.position_size",
+        "strategy.position_avg_price",
+        "strategy.wintrades",
+        "strategy.losstrades",
+        "strategy.eventrades"
+      ],
+      "definition": "Strategy-level account, equity, profit, and position variables available in strategy scripts."
+    },
+    {
+      "family": "strategy_trade_collections",
+      "variables": [
+        "strategy.opentrades",
+        "strategy.closedtrades"
+      ],
+      "definition": "Trade collection namespaces exposing per-trade metrics for open and closed trades."
+    }
+  ],
+  "keyword_taxonomy": {
+    "declarations": [
+      "indicator",
+      "strategy",
+      "library",
+      "import",
+      "export",
+      "type",
+      "enum",
+      "method"
+    ],
+    "storage_and_type": [
+      "var",
+      "varip",
+      "const",
+      "input",
+      "simple",
+      "series",
+      "int",
+      "float",
+      "bool",
+      "color",
+      "string",
+      "array",
+      "matrix",
+      "map"
+    ],
+    "control_flow": [
+      "if",
+      "else",
+      "switch",
+      "for",
+      "to",
+      "by",
+      "in",
+      "while",
+      "break",
+      "continue"
+    ],
+    "logical": [
+      "and",
+      "or",
+      "not"
+    ],
+    "special_literals": [
+      "true",
+      "false",
+      "na"
+    ]
+  },
+  "rag_routing_facets": [
+    "namespace",
+    "built_in_variable_family",
+    "syntax_construct",
+    "operator_category",
+    "type_category",
+    "qualifier",
+    "invariant",
+    "collection_kind",
+    "drawing_kind",
+    "strategy_kind",
+    "request_kind",
+    "visual_output_kind",
+    "constant_namespace"
+  ],
+  "enum_and_constant_namespace_taxonomy": [
+    {
+      "name": "barmerge",
+      "definition": "Constants controlling requested-series gap filling and lookahead behavior.",
+      "members": [
+        "gaps_on",
+        "gaps_off",
+        "lookahead_on",
+        "lookahead_off"
+      ]
+    },
+    {
+      "name": "currency",
+      "definition": "Currency code constants used in declarations, requests, and conversions.",
+      "members": [
+        "currency constants such as USD, EUR, JPY and other supported ISO-like currency identifiers"
+      ]
+    },
+    {
+      "name": "display",
+      "definition": "Constants controlling where visual outputs appear.",
+      "members": [
+        "all",
+        "none",
+        "pane",
+        "price_scale",
+        "status_line",
+        "data_window"
+      ]
+    },
+    {
+      "name": "extend",
+      "definition": "Constants controlling line extension direction.",
+      "members": [
+        "none",
+        "left",
+        "right",
+        "both"
+      ]
+    },
+    {
+      "name": "format",
+      "definition": "Constants controlling script/output numeric formatting.",
+      "members": [
+        "inherit",
+        "price",
+        "volume",
+        "percent"
+      ]
+    },
+    {
+      "name": "location",
+      "definition": "Constants controlling shape/character/label placement relative to bars or panes.",
+      "members": [
+        "abovebar",
+        "belowbar",
+        "top",
+        "bottom",
+        "absolute"
+      ]
+    },
+    {
+      "name": "order",
+      "definition": "Constants controlling strategy order direction.",
+      "members": [
+        "long",
+        "short"
+      ]
+    },
+    {
+      "name": "plot.style",
+      "definition": "Constants controlling plot rendering style.",
+      "members": [
+        "line",
+        "stepline",
+        "stepline_diamond",
+        "histogram",
+        "cross",
+        "area",
+        "columns",
+        "circles",
+        "linebr",
+        "areabr"
+      ]
+    },
+    {
+      "name": "position",
+      "definition": "Constants controlling table position in the script pane or chart.",
+      "members": [
+        "top_left",
+        "top_center",
+        "top_right",
+        "middle_left",
+        "middle_center",
+        "middle_right",
+        "bottom_left",
+        "bottom_center",
+        "bottom_right"
+      ]
+    },
+    {
+      "name": "scale",
+      "definition": "Constants controlling script scale behavior.",
+      "members": [
+        "left",
+        "right",
+        "none"
+      ]
+    },
+    {
+      "name": "shape",
+      "definition": "Constants controlling plotshape marker style.",
+      "members": [
+        "xcross",
+        "cross",
+        "triangleup",
+        "triangledown",
+        "flag",
+        "circle",
+        "arrowup",
+        "arrowdown",
+        "labelup",
+        "labeldown",
+        "square",
+        "diamond"
+      ]
+    },
+    {
+      "name": "size",
+      "definition": "Constants controlling visual object text/marker sizing.",
+      "members": [
+        "auto",
+        "tiny",
+        "small",
+        "normal",
+        "large",
+        "huge"
+      ]
+    },
+    {
+      "name": "strategy.direction",
+      "definition": "Constants controlling allowed strategy direction in risk APIs.",
+      "members": [
+        "all",
+        "long",
+        "short"
+      ]
+    },
+    {
+      "name": "strategy.oca",
+      "definition": "Constants controlling one-cancels-all strategy order grouping.",
+      "members": [
+        "none",
+        "cancel",
+        "reduce"
+      ]
+    },
+    {
+      "name": "strategy.order",
+      "definition": "Constants controlling order alert behavior and fills where supported.",
+      "members": [
+        "contract/order-related constants in the strategy namespace"
+      ]
+    },
+    {
+      "name": "text.align",
+      "definition": "Constants controlling table and drawing text alignment.",
+      "members": [
+        "left",
+        "center",
+        "right",
+        "top",
+        "bottom"
+      ]
+    },
+    {
+      "name": "xloc",
+      "definition": "Constants controlling drawing x-coordinate interpretation.",
+      "members": [
+        "bar_index",
+        "bar_time"
+      ]
+    },
+    {
+      "name": "yloc",
+      "definition": "Constants controlling label y-coordinate interpretation.",
+      "members": [
+        "price",
+        "abovebar",
+        "belowbar"
+      ]
+    }
+  ],
+  "variable_namespace_taxonomy": [
+    {
+      "name": "barstate",
+      "definition": "Execution-state booleans for the current bar.",
+      "members": [
+        "isfirst",
+        "islast",
+        "ishistory",
+        "isrealtime",
+        "isnew",
+        "isconfirmed",
+        "islastconfirmedhistory"
+      ]
+    },
+    {
+      "name": "chart",
+      "definition": "Chart type and chart color metadata variables, plus chart point helpers.",
+      "members": [
+        "bg_color",
+        "fg_color",
+        "is_heikinashi",
+        "is_kagi",
+        "is_linebreak",
+        "is_pnf",
+        "is_range",
+        "is_renko",
+        "is_standard"
+      ]
+    },
+    {
+      "name": "session",
+      "definition": "Session-state booleans for market, premarket, and postmarket bars.",
+      "members": [
+        "ismarket",
+        "ispremarket",
+        "ispostmarket"
+      ]
+    },
+    {
+      "name": "syminfo",
+      "definition": "Symbol metadata variables.",
+      "members": [
+        "basecurrency",
+        "currency",
+        "description",
+        "mintick",
+        "pointvalue",
+        "prefix",
+        "pricescale",
+        "root",
+        "session",
+        "ticker",
+        "tickerid",
+        "timezone",
+        "type",
+        "volumetype"
+      ]
+    },
+    {
+      "name": "timeframe",
+      "definition": "Chart timeframe metadata variables and timeframe helper functions.",
+      "members": [
+        "isseconds",
+        "isminutes",
+        "isintraday",
+        "isdaily",
+        "isweekly",
+        "ismonthly",
+        "multiplier",
+        "period"
+      ]
+    },
+    {
+      "name": "strategy",
+      "definition": "Strategy state variables, order functions, risk functions, and trade collection namespaces.",
+      "members": [
+        "account_currency",
+        "cash",
+        "equity",
+        "initial_capital",
+        "netprofit",
+        "openprofit",
+        "position_size",
+        "position_avg_price",
+        "wintrades",
+        "losstrades",
+        "eventrades",
+        "opentrades",
+        "closedtrades"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,2 @@
+# No third-party runtime dependencies are required.
+# The builder uses only the Python standard library.

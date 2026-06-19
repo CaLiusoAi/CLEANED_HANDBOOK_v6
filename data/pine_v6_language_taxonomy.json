@@ -1,0 +1,425 @@
+{
+  "schema_version": "1.0",
+  "taxonomy_id": "pine_script_v6_language_taxonomy",
+  "title": "Pine Script v6 Language Taxonomy",
+  "version": "v6",
+  "source": {
+    "name": "TradingView Pine Script v6 User Manual",
+    "base_url": "https://www.tradingview.com/pine-script-docs/",
+    "language_url": "https://www.tradingview.com/pine-script-docs/language/",
+    "reference_url": "https://www.tradingview.com/pine-script-reference/v6/"
+  },
+  "description": "Section and concept taxonomy for Pine Script v6 language material, suitable for tagging RAG chunks and routing Pine language questions.",
+  "top_level_sections": [
+    {
+      "id": "language",
+      "label": "Language",
+      "url": "https://www.tradingview.com/pine-script-docs/language/",
+      "children": [
+        {
+          "id": "execution_model",
+          "label": "Execution model",
+          "url": "https://www.tradingview.com/pine-script-docs/language/execution-model/",
+          "content_type": "manual_page",
+          "concepts": [
+            "event-driven sequential execution",
+            "historical bar execution",
+            "realtime tick execution",
+            "rollback",
+            "commit",
+            "time series storage",
+            "bar-by-bar calculation",
+            "script executions",
+            "runtime state"
+          ]
+        },
+        {
+          "id": "type_system",
+          "label": "Type system",
+          "url": "https://www.tradingview.com/pine-script-docs/language/type-system/",
+          "content_type": "manual_page",
+          "children": [
+            {
+              "id": "qualifiers",
+              "label": "Qualifiers",
+              "items": ["const", "input", "simple", "series"]
+            },
+            {
+              "id": "value_types",
+              "label": "Value types",
+              "items": ["int", "float", "bool", "color", "string"]
+            },
+            {
+              "id": "special_types",
+              "label": "Special types",
+              "items": ["void", "na"]
+            },
+            {
+              "id": "reference_types",
+              "label": "Reference types",
+              "items": ["line", "linefill", "box", "polyline", "label", "table", "chart.point", "array", "matrix", "map", "user-defined type"]
+            },
+            {
+              "id": "enum_types",
+              "label": "Enum types",
+              "items": ["built-in enums", "user-defined enums"]
+            },
+            {
+              "id": "type_templates",
+              "label": "Type templates",
+              "items": ["array<type>", "matrix<type>", "map<keyType, valueType>"]
+            },
+            {
+              "id": "type_behaviors",
+              "label": "Type behaviors",
+              "items": ["qualified types", "automatic casting", "explicit casting", "value vs reference semantics", "collections", "UDTs"]
+            }
+          ]
+        },
+        {
+          "id": "script_structure",
+          "label": "Script structure",
+          "url": "https://www.tradingview.com/pine-script-docs/language/script-structure/",
+          "content_type": "manual_page",
+          "concepts": [
+            "version declaration",
+            "declaration statement",
+            "global scope",
+            "local scopes",
+            "statements",
+            "expressions",
+            "comments",
+            "line wrapping",
+            "annotations"
+          ]
+        },
+        {
+          "id": "identifiers",
+          "label": "Identifiers",
+          "url": "https://www.tradingview.com/pine-script-docs/language/identifiers/",
+          "content_type": "manual_page",
+          "concepts": [
+            "naming rules",
+            "case sensitivity",
+            "reserved keywords",
+            "shadowing",
+            "readability conventions"
+          ]
+        },
+        {
+          "id": "declaration_statements",
+          "label": "Declaration statements",
+          "url": "https://www.tradingview.com/pine-script-docs/language/declaration-statements/",
+          "content_type": "manual_page",
+          "children": [
+            {
+              "id": "script_declarations",
+              "label": "Script declarations",
+              "items": ["indicator()", "strategy()", "library()"]
+            },
+            {
+              "id": "library_declarations",
+              "label": "Library declarations",
+              "items": ["exported functions", "exported variables", "exported types", "exported enums", "import"]
+            },
+            {
+              "id": "type_and_enum_declarations",
+              "label": "Type and enum declarations",
+              "items": ["type", "enum", "field declarations", "enum fields"]
+            }
+          ]
+        },
+        {
+          "id": "variable_declarations",
+          "label": "Variable declarations",
+          "url": "https://www.tradingview.com/pine-script-docs/language/variable-declarations/",
+          "content_type": "manual_page",
+          "children": [
+            {
+              "id": "forms",
+              "label": "Declaration forms",
+              "items": ["single-variable declaration", "tuple declaration", "underscore discard identifier"]
+            },
+            {
+              "id": "modes",
+              "label": "Declaration modes",
+              "items": ["default per-execution declaration", "var", "varip"]
+            },
+            {
+              "id": "keywords",
+              "label": "Declaration keywords",
+              "items": ["export", "var", "varip", "const", "input", "simple", "series", "type keywords"]
+            },
+            {
+              "id": "assignment",
+              "label": "Assignment",
+              "items": ["= declaration assignment", ":= reassignment", "scope", "shadowing"]
+            }
+          ]
+        },
+        {
+          "id": "operators",
+          "label": "Operators",
+          "url": "https://www.tradingview.com/pine-script-docs/language/operators/",
+          "content_type": "manual_page",
+          "children": [
+            {
+              "id": "arithmetic",
+              "label": "Arithmetic operators",
+              "items": ["+", "-", "*", "/", "%"]
+            },
+            {
+              "id": "comparison",
+              "label": "Comparison operators",
+              "items": ["<", "<=", ">", ">=", "==", "!="]
+            },
+            {
+              "id": "logical",
+              "label": "Logical operators",
+              "items": ["not", "and", "or"]
+            },
+            {
+              "id": "ternary",
+              "label": "Ternary conditional operator",
+              "items": ["condition ? valueWhenTrue : valueWhenFalse"]
+            },
+            {
+              "id": "history_reference",
+              "label": "History-referencing operator",
+              "items": ["[]"]
+            },
+            {
+              "id": "assignment_operators",
+              "label": "Assignment operators",
+              "items": ["=", ":="]
+            },
+            {
+              "id": "operator_behaviors",
+              "label": "Operator behaviors",
+              "items": ["precedence", "associativity", "na propagation", "type casting"]
+            }
+          ]
+        },
+        {
+          "id": "conditional_structures",
+          "label": "Conditional structures",
+          "url": "https://www.tradingview.com/pine-script-docs/language/conditional-structures/",
+          "content_type": "manual_page",
+          "children": [
+            {
+              "id": "if_structure",
+              "label": "if structure",
+              "items": ["if", "else if", "else", "local blocks", "return values", "side effects"]
+            },
+            {
+              "id": "switch_structure",
+              "label": "switch structure",
+              "items": ["switch expression form", "switch condition form", "default branch", "return values", "side effects"]
+            }
+          ]
+        },
+        {
+          "id": "loops",
+          "label": "Loops",
+          "url": "https://www.tradingview.com/pine-script-docs/language/loops/",
+          "content_type": "manual_page",
+          "children": [
+            {
+              "id": "loop_forms",
+              "label": "Loop forms",
+              "items": ["for", "for...in", "while"]
+            },
+            {
+              "id": "loop_control",
+              "label": "Loop control",
+              "items": ["break", "continue", "return expressions", "local scope"]
+            },
+            {
+              "id": "iteration_targets",
+              "label": "Iteration targets",
+              "items": ["ranges", "arrays", "matrices", "maps"]
+            }
+          ]
+        },
+        {
+          "id": "built_ins",
+          "label": "Built-ins",
+          "url": "https://www.tradingview.com/pine-script-docs/language/built-ins/",
+          "content_type": "manual_page",
+          "children": [
+            {
+              "id": "built_in_kinds",
+              "label": "Built-in kinds",
+              "items": ["variables", "functions", "constants", "namespaces", "methods"]
+            },
+            {
+              "id": "core_namespaces",
+              "label": "Core namespaces",
+              "items": ["array", "box", "chart", "color", "hline", "input", "label", "line", "linefill", "log", "map", "math", "matrix", "plot", "polyline", "request", "runtime", "str", "strategy", "syminfo", "ta", "table", "ticker", "timeframe"]
+            },
+            {
+              "id": "declaration_functions",
+              "label": "Declaration functions",
+              "items": ["indicator", "strategy", "library"]
+            }
+          ]
+        },
+        {
+          "id": "user_defined_functions",
+          "label": "User-defined functions",
+          "url": "https://www.tradingview.com/pine-script-docs/language/user-defined-functions/",
+          "content_type": "manual_page",
+          "children": [
+            {
+              "id": "function_forms",
+              "label": "Function forms",
+              "items": ["single-line functions", "multi-line functions", "exported functions", "methods"]
+            },
+            {
+              "id": "parameters",
+              "label": "Parameters",
+              "items": ["typed parameters", "qualified parameters", "default values", "reference-type parameters"]
+            },
+            {
+              "id": "returns",
+              "label": "Returns",
+              "items": ["implicit return expression", "tuple returns", "void returns"]
+            },
+            {
+              "id": "function_scope",
+              "label": "Function scope",
+              "items": ["local variables", "global variables", "recursion restrictions", "function call consistency"]
+            }
+          ]
+        },
+        {
+          "id": "objects",
+          "label": "Objects",
+          "url": "https://www.tradingview.com/pine-script-docs/language/objects/",
+          "content_type": "manual_page",
+          "children": [
+            {
+              "id": "udts",
+              "label": "User-defined types",
+              "items": ["type declarations", "fields", "default field values", "object instances", "copying objects"]
+            },
+            {
+              "id": "object_operations",
+              "label": "Object operations",
+              "items": ["field access", "field reassignment", "object references", "nested objects", "objects in collections"]
+            }
+          ]
+        },
+        {
+          "id": "enums",
+          "label": "Enums",
+          "url": "https://www.tradingview.com/pine-script-docs/language/enums/",
+          "content_type": "manual_page",
+          "children": [
+            {
+              "id": "enum_declarations",
+              "label": "Enum declarations",
+              "items": ["enum", "fields", "titles", "exported enums"]
+            },
+            {
+              "id": "enum_usage",
+              "label": "Enum usage",
+              "items": ["enum values", "switch with enums", "input enum options", "type-safe symbolic values"]
+            }
+          ]
+        },
+        {
+          "id": "methods",
+          "label": "Methods",
+          "url": "https://www.tradingview.com/pine-script-docs/language/methods/",
+          "content_type": "manual_page",
+          "children": [
+            {
+              "id": "method_kinds",
+              "label": "Method kinds",
+              "items": ["built-in methods", "user-defined methods"]
+            },
+            {
+              "id": "method_syntax",
+              "label": "Method syntax",
+              "items": ["dot notation", "receiver parameter", "method overloading by type", "namespace-equivalent calls"]
+            }
+          ]
+        },
+        {
+          "id": "arrays",
+          "label": "Arrays",
+          "url": "https://www.tradingview.com/pine-script-docs/language/arrays/",
+          "content_type": "manual_page",
+          "children": [
+            {
+              "id": "array_model",
+              "label": "Array model",
+              "items": ["one-dimensional collections", "array IDs", "zero-based indices", "homogeneous element type", "dynamic size"]
+            },
+            {
+              "id": "array_operations",
+              "label": "Array operations",
+              "items": ["create", "read", "write", "insert", "remove", "push", "pop", "shift", "unshift", "slice", "copy", "sort", "iterate"]
+            }
+          ]
+        },
+        {
+          "id": "matrices",
+          "label": "Matrices",
+          "url": "https://www.tradingview.com/pine-script-docs/language/matrices/",
+          "content_type": "manual_page",
+          "children": [
+            {
+              "id": "matrix_model",
+              "label": "Matrix model",
+              "items": ["two-dimensional collections", "matrix IDs", "rows", "columns", "zero-based row and column indices", "homogeneous element type"]
+            },
+            {
+              "id": "matrix_operations",
+              "label": "Matrix operations",
+              "items": ["create", "read", "write", "add rows", "add columns", "remove rows", "remove columns", "copy", "reshape", "iterate", "matrix calculations"]
+            }
+          ]
+        },
+        {
+          "id": "maps",
+          "label": "Maps",
+          "url": "https://www.tradingview.com/pine-script-docs/language/maps/",
+          "content_type": "manual_page",
+          "children": [
+            {
+              "id": "map_model",
+              "label": "Map model",
+              "items": ["key-value collections", "map IDs", "unique keys", "homogeneous key type", "homogeneous value type"]
+            },
+            {
+              "id": "map_operations",
+              "label": "Map operations",
+              "items": ["create", "put", "get", "contains", "remove", "keys", "values", "copy", "iterate"]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "rag_tag_aliases": {
+    "execution_model": ["runtime", "bar execution", "rollback", "time series"],
+    "type_system": ["types", "qualifiers", "const", "input", "simple", "series", "reference types"],
+    "script_structure": ["structure", "version", "scope", "comments"],
+    "identifiers": ["names", "reserved words", "naming"],
+    "declaration_statements": ["indicator", "strategy", "library", "type", "enum", "import", "export"],
+    "variable_declarations": ["variables", "var", "varip", "assignment", "tuple"],
+    "operators": ["arithmetic", "comparison", "logical", "ternary", "history reference"],
+    "conditional_structures": ["if", "switch", "branches"],
+    "loops": ["for", "for in", "while", "break", "continue"],
+    "built_ins": ["built-ins", "namespaces", "reference manual", "ta", "request", "strategy"],
+    "user_defined_functions": ["functions", "parameters", "returns", "exported functions"],
+    "objects": ["UDT", "user-defined types", "fields", "object references"],
+    "enums": ["enum", "symbolic values", "input enums"],
+    "methods": ["dot notation", "receiver", "method syntax"],
+    "arrays": ["array", "collection", "one-dimensional"],
+    "matrices": ["matrix", "two-dimensional", "rows", "columns"],
+    "maps": ["map", "dictionary", "key-value"]
+  }
+}
