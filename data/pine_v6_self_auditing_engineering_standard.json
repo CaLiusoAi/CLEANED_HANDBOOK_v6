@@ -1,0 +1,153 @@
+{
+  "schema_version": "1.0",
+  "standard_id": "pine_v6_self_auditing_engineering_standard",
+  "title": "Pine Script v6 RAG Self-Auditing Engineering Standard",
+  "status": "canonical_superseding_specification",
+  "version": "2026-06-19",
+  "scope": [
+    "scripts/build_pine_v6_rag.py",
+    "data/pine_v6_language_taxonomy.json",
+    "data/pine_v6_language_reference_taxonomy.json",
+    "README.md",
+    "requirements.txt"
+  ],
+  "core_semantics": {
+    "framework_rule": "The taxonomy, crawler, validator, evidence, and closure model are one system. A requirement is incomplete until it has an owning mechanism, validation, evidence, falsification criteria, confidence classification, temporal dependency management, and closure state.",
+    "machine_translation_rule": "Every normative object must be expressible as JSON with stable ids, deterministic validation, and finite closure states.",
+    "external_governance_assumption_rule": "No requirement may rely on external review, unstated policy, or manual trust as its only control. Manual review is allowed only when represented as evidence with an owner, timestamp, confidence, and closure state."
+  },
+  "closure_state_machine": {
+    "states": ["draft", "implemented", "validated", "evidenced", "closed", "reopened", "superseded"],
+    "initial_state": "draft",
+    "terminal_states": ["closed", "superseded"],
+    "transitions": [
+      {"from": "draft", "to": "implemented", "guard": "owning mechanism exists"},
+      {"from": "implemented", "to": "validated", "guard": "validation command or deterministic check passes"},
+      {"from": "validated", "to": "evidenced", "guard": "evidence artifact path exists or command output is recorded"},
+      {"from": "evidenced", "to": "closed", "guard": "falsification criteria are explicit and no open finding references the requirement"},
+      {"from": "closed", "to": "reopened", "guard": "source drift, failed validation, missing evidence, or changed requirement"},
+      {"from": "reopened", "to": "implemented", "guard": "replacement mechanism is committed"},
+      {"from": "closed", "to": "superseded", "guard": "new standard version replaces this requirement"}
+    ]
+  },
+  "confidence_classification": {
+    "high": "Machine-validated, evidence-backed, deterministic, and not dependent on blocked network access.",
+    "medium": "Structurally validated but semantically dependent on periodically changing upstream docs or manual taxonomy review.",
+    "low": "Known environmental limitation, partial evidence, or unverified external source dependency. Low-confidence items cannot close without an explicit remediation path."
+  },
+  "temporal_dependency_management": {
+    "upstream_docs": {
+      "dependency": "TradingView Pine Script v6 User Manual and Reference Manual may change over time.",
+      "owner": "crawler_and_taxonomy_validator",
+      "refresh_trigger": "Any successful live crawl with changed canonical URLs, changed content hashes, new reference namespaces, or altered language pages reopens affected taxonomy requirements.",
+      "fallback_when_network_blocked": "Record the failed fetches as evidence, keep generated datasets out of committed canonical artifacts, and mark live-content completeness as not closed."
+    },
+    "local_standard": {
+      "dependency": "Repository files can drift independently of the upstream docs.",
+      "owner": "scripts/audit_pine_v6_assets.py",
+      "refresh_trigger": "Any change to scoped files requires rerunning the audit script before closure."
+    }
+  },
+  "requirements": [
+    {
+      "id": "REQ-CANONICAL-SOURCES",
+      "statement": "Canonical docs scope must be limited to TradingView Pine Script User Manual and v6 Reference Manual URLs.",
+      "owning_mechanism": "BASE_ALLOWED and DEFAULT_SEED_URLS in scripts/build_pine_v6_rag.py plus source_scope fields in taxonomy JSON.",
+      "validation": "audit check validates canonical source URLs and allowed URL prefixes.",
+      "evidence": ["scripts/build_pine_v6_rag.py", "data/pine_v6_language_reference_taxonomy.json"],
+      "falsification_criteria": "Any non-TradingView canonical URL appears in source_scope, BASE_ALLOWED, or default seeds without an explicit noncanonical label.",
+      "confidence": "high",
+      "closure_state": "closed"
+    },
+    {
+      "id": "REQ-BUILDER-SYNTAX",
+      "statement": "The builder must be importable and syntactically valid on the supported Python runtime.",
+      "owning_mechanism": "Python compiler check in audit script.",
+      "validation": "python -m py_compile scripts/build_pine_v6_rag.py",
+      "evidence": ["audit command output"],
+      "falsification_criteria": "py_compile returns nonzero or importing safe functions raises a syntax/import error.",
+      "confidence": "high",
+      "closure_state": "closed"
+    },
+    {
+      "id": "REQ-TAXONOMY-STRUCTURE",
+      "statement": "Language taxonomy must preserve the 17 tracked Pine v6 Language topics and reference taxonomy must define namespaces, invariants, variables, syntax, types, operators, constants, and routing facets.",
+      "owning_mechanism": "data/pine_v6_language_taxonomy.json and data/pine_v6_language_reference_taxonomy.json.",
+      "validation": "audit script checks JSON syntax, required keys, minimum counts, stable ids, and nonempty definitions.",
+      "evidence": ["data/pine_v6_language_taxonomy.json", "data/pine_v6_language_reference_taxonomy.json"],
+      "falsification_criteria": "Missing required section, missing definition, duplicate id/name in a taxonomy collection, or count below the asserted minimum.",
+      "confidence": "medium",
+      "closure_state": "closed"
+    },
+    {
+      "id": "REQ-EVIDENCE-ARCHITECTURE",
+      "statement": "Every requirement must terminate in evidence and closure, not narrative assertion.",
+      "owning_mechanism": "This standard's requirements array and scripts/audit_pine_v6_assets.py requirement validator.",
+      "validation": "audit script requires owning_mechanism, validation, evidence, falsification_criteria, confidence, and closure_state for every requirement.",
+      "evidence": ["data/pine_v6_self_auditing_engineering_standard.json"],
+      "falsification_criteria": "Any requirement lacks a required governance field or uses a closure_state outside the declared state machine.",
+      "confidence": "high",
+      "closure_state": "closed"
+    },
+    {
+      "id": "REQ-NO-LAZY-STUBS",
+      "statement": "Scoped artifacts must not contain unfinished-work markers, stub-only evidence, or committed empty failed-build outputs masquerading as deliverables.",
+      "owning_mechanism": "audit script scans tracked scoped files and verifies no output/ failed-build artifacts are tracked.",
+      "validation": "audit script placeholder and tracked-output checks.",
+      "evidence": ["git ls-files", "audit command output"],
+      "falsification_criteria": "A scoped file contains unfinished-work marker text or git tracks output/*.json/jsonl/csv build artifacts from an incomplete crawl.",
+      "confidence": "high",
+      "closure_state": "closed"
+    },
+    {
+      "id": "REQ-TRACEABILITY",
+      "statement": "Documentation must point users to the builder and both taxonomy layers, and the standard must identify the files it governs.",
+      "owning_mechanism": "README language taxonomy section and standard scope array.",
+      "validation": "audit script checks README references and verifies scoped paths exist.",
+      "evidence": ["README.md", "data/pine_v6_self_auditing_engineering_standard.json"],
+      "falsification_criteria": "README omits a canonical artifact, standard scope references a missing file, or audit cannot map a governed artifact to a file path.",
+      "confidence": "high",
+      "closure_state": "closed"
+    },
+    {
+      "id": "REQ-TEMPORAL-DRIFT",
+      "statement": "Upstream drift must reopen affected requirements rather than silently preserving stale claims.",
+      "owning_mechanism": "temporal_dependency_management refresh triggers and crawler build_summary/failed_fetches behavior.",
+      "validation": "audit script validates the temporal_dependency_management block and crawler emits failed_fetches/build_summary fields.",
+      "evidence": ["data/pine_v6_self_auditing_engineering_standard.json", "scripts/build_pine_v6_rag.py"],
+      "falsification_criteria": "No refresh trigger exists, failed fetches are not recorded, or live-content completeness is represented as closed when network evidence is unavailable.",
+      "confidence": "medium",
+      "closure_state": "closed"
+    }
+  ],
+  "audit_findings_closed_in_this_version": [
+    {
+      "id": "FINDING-001",
+      "area": "Evidence architecture",
+      "status": "closed",
+      "rejection": "Prior taxonomy files described content but did not define a governing evidence and closure model.",
+      "fix": "Added this self-auditing engineering standard with requirement ownership, validation, evidence, falsification criteria, confidence, temporal triggers, and closure states."
+    },
+    {
+      "id": "FINDING-002",
+      "area": "Traceability",
+      "status": "closed",
+      "rejection": "Prior artifacts did not provide a canonical mechanism mapping requirements to files and closure evidence.",
+      "fix": "Added standard scope, requirements, evidence paths, and audit script validation."
+    },
+    {
+      "id": "FINDING-003",
+      "area": "Self-validation",
+      "status": "closed",
+      "rejection": "Previous validation relied on ad hoc command runs rather than a reusable audit entrypoint.",
+      "fix": "Added scripts/audit_pine_v6_assets.py for deterministic checks across code, JSON, documentation references, governance fields, and taxonomy counts."
+    },
+    {
+      "id": "FINDING-004",
+      "area": "Temporal dependency",
+      "status": "closed",
+      "rejection": "Upstream docs drift and blocked-network states were not first-class semantics.",
+      "fix": "Added temporal dependency management rules and falsification criteria that reopen requirements on source drift or missing live evidence."
+    }
+  ]
+}
