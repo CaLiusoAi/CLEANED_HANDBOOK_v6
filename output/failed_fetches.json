@@ -1,0 +1,18 @@
+[
+  {
+    "url": "https://www.tradingview.com/pine-script-docs/",
+    "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+  },
+  {
+    "url": "https://www.tradingview.com/pine-script-docs/welcome/",
+    "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+  },
+  {
+    "url": "https://www.tradingview.com/pine-script-docs/release-notes/",
+    "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+  },
+  {
+    "url": "https://www.tradingview.com/pine-script-reference/v6/",
+    "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+  }
+]
